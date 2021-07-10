@@ -1,9 +1,24 @@
 $color-gray: #f5f5f5;
 
-// 日曆 start
-.ant-picker-cell .ant-picker-cell-inner {
-    height: 65px;
+// datepicker start
+/* 覆蓋日曆的pick start */
+.calendar {
+    .ant-picker-cell .ant-picker-cell-inner {
+        height: 77px;
+        overflow: hidden;
+    }
+
+    .ant-picker-calendar-date-today .ant-picker-calendar-date-value {
+        border: 1px solid #1890ff;
+    }
+
+    .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before{
+        display: none;
+    }
 }
+/* 覆蓋日曆的pick end */
+
+
 .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
 .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
 .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
