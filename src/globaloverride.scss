@@ -1,0 +1,12 @@
+$color-gray: #f5f5f5;
+
+// 日曆 start
+.ant-picker-cell .ant-picker-cell-inner {
+    height: 65px;
+}
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+    color: black;
+    background-color: white;
+}

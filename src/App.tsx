@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import { RegisterPage, SigninPage } from './pages';
-import { BrowserRouter,HashRouter, Switch, Route } from 'react-router-dom';
+import { HomePage, RegisterPage, SigninPage } from './pages';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <HashRouter>
         <Switch>
-          <Route exact path='/' component={SigninPage}></Route>
+          <Route exact path='/' component={HomePage}></Route>
           <Route path='/signin' component={SigninPage}></Route>
           <Route path='/register' component={RegisterPage}></Route>
           <Route render={()=> <h1>404 not found</h1>}></Route>
