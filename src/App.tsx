@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { HomePage, RegisterPage, SigninPage } from './pages';
+import { HomePage, RegisterPage, SchedulePage, SigninPage } from './pages';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 
 

@@ -2,27 +2,22 @@ import styles from './HomePage.module.scss';
 import { Calendar, Modal, Input, Button, DatePicker, Form } from 'antd';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-tw';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { MainLayout } from '../../layouts/mainLayout';
 import { SubjectModal } from './SubjectModal';
+import { useDispatch } from 'react-redux';
+import { useSelector } from '../../redux/hooks';
+import { scheduleList } from '../../redux/scheduleList/slice';
 moment.locale('zh-tw');
 
 
 
 
 export const HomePage: React.FC = () => {
-    const fakeCalendardata = [
-        { date: 8, subject: '今天練胸' },
-        { date: 9, subject: '今天練胸' },
-        { date: 12, subject: '今天練腿' },
-        { date: 7, subject: '今天練腿' },
-        { date: 1, subject: '不想動' },
-        { date: 7, subject: '加班' },
-    ]
+    const dispatch = useDispatch();
+    const calendarData = useSelector(state => state.scheduleList.schedule);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    // 日曆資料內容
-    const [calendarData, setCalendarData] = useState(fakeCalendardata);
     const [form] = Form.useForm();
     // modat start
     const showModal = () => {
@@ -31,9 +26,9 @@ export const HomePage: React.FC = () => {
 
     const handleOk = () => {
         form.validateFields().then((value: any) => {
-            const date = value.date.date();
-            const subject = value.subject
-            setCalendarData((prevState) => [...prevState, { date, subject }]);
+            // const date = value.date.date();
+            // const subject = value.subject
+            // setCalendarData((prevState) => [...prevState, { date, subject }]);
             setIsModalVisible(false);
         })
     };
@@ -60,8 +55,7 @@ export const HomePage: React.FC = () => {
 
     /** 抓資料 */
     function getListData(value: Moment) {
-        const listData = calendarData.filter(data => data.date === value.date());
-        // 沒資料回空陣列
+        const listData = calendarData.filter(data => data.date.date() === value.date());
         return listData;
     }
 
@@ -73,10 +67,11 @@ export const HomePage: React.FC = () => {
     /** 渲染資料到日曆格 */
     function dateCellRender(value: Moment) {
         const listData = getListData(value);
+
         return (
             <ul className={styles.events}>
                 {listData.map(item => (
-                    <li key={uuid()} className={styles['ant-badge-status']} onClick={(e) => {
+                    <li key={item.id} className={styles['ant-badge-status']} onClick={(e) => {
                         e.stopPropagation()
                         onOpenBlock()
                     }}>
@@ -93,6 +88,10 @@ export const HomePage: React.FC = () => {
     }
     // calendar end
 
+
+    useEffect(() => {
+        dispatch(scheduleList.actions.getScheduleList());
+    }, [])
 
     return (<MainLayout>
         <div>
