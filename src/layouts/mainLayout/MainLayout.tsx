@@ -1,7 +1,8 @@
 import { Header } from "../../components"
 
-export const MainLayout: React.FC = () => {
-    return <div>
+export const MainLayout: React.FC = (props) => {
+    return <>
         <Header/>
-    </div>
+        <div>{props.children}</div>
+    </>
 }

@@ -4,6 +4,7 @@ import moment, { Moment } from 'moment';
 import 'moment/locale/zh-tw';
 import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import { MainLayout } from '../../layouts/mainLayout';
 import { SubjectModal } from './SubjectModal';
 moment.locale('zh-tw');
 
@@ -64,13 +65,21 @@ export const HomePage: React.FC = () => {
         return listData;
     }
 
+    function onOpenBlock() {
+        console.log('test')
+    }
+
+
     /** 渲染資料到日曆格 */
     function dateCellRender(value: Moment) {
         const listData = getListData(value);
         return (
             <ul className={styles.events}>
                 {listData.map(item => (
-                    <li key={uuid()} className={styles['ant-badge-status']}>
+                    <li key={uuid()} className={styles['ant-badge-status']} onClick={(e) => {
+                        e.stopPropagation()
+                        onOpenBlock()
+                    }}>
                         {item.subject}
                     </li>
                 ))}
@@ -85,7 +94,7 @@ export const HomePage: React.FC = () => {
     // calendar end
 
 
-    return (<>
+    return (<MainLayout>
         <div>
             <Calendar onPanelChange={onPanelChange} fullscreen={false} dateCellRender={dateCellRender} onSelect={onClickDate} className={`${styles['mobile-calendar-card']} calendar`} />
         </div>
@@ -128,5 +137,5 @@ export const HomePage: React.FC = () => {
 
         </Modal>
 
-    </>)
+    </MainLayout>)
 }
