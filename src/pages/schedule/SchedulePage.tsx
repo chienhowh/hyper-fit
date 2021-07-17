@@ -8,11 +8,18 @@ import { SchedulePanel } from './SchedulePanel';
 import { v4 as uuid } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { createContext, useState } from 'react';
+import React from 'react';
+import { Modal } from 'antd';
+import { MovementModal } from './Movement-modal';
 
 
 interface RouteParams {
     scheduleId: string;
 }
+
+
+
 
 export const SchedulePage: React.FC = () => {
     const { scheduleId } = useParams<RouteParams>();
@@ -20,9 +27,23 @@ export const SchedulePage: React.FC = () => {
     /** 所有的schedule*/
     const scheduleList = useSelector(s => s.scheduleList.scheduleList);
     const schedule = scheduleList.filter(s => s.id === scheduleId)[0];
+    /** 創建movement Modal start */
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
 
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+    /** 創建movement Modal end */
 
     return (
+
         <MainLayout>
             <div className="">
                 <div className="text-xl text-center">
@@ -50,9 +71,14 @@ export const SchedulePage: React.FC = () => {
 
                     }) : ''}
                 </div>
-                <Button icon={<PlusOutlined />} className={styles.addMovement}></Button>
-
+                <Button icon={<PlusOutlined />} className={styles.addMovement} onClick={showModal}></Button>
             </div>
+            {/* modal start */}
+            <Modal title="Basic Modal" visible={isModalVisible} onCancel={handleCancel}
+                footer={null}>
+                <MovementModal handelConfirm={handleOk} handelCancel={handleCancel} scheduleId={scheduleId}></MovementModal>
+            </Modal>
         </MainLayout>
+
     )
 }

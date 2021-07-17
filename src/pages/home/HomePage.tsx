@@ -6,7 +6,6 @@ import 'moment/locale/zh-tw';
 import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { MainLayout } from '../../layouts/mainLayout';
-import { SubjectModal } from './SubjectModal';
 import { useDispatch } from 'react-redux';
 import { useSelector } from '../../redux/hooks';
 import { scheduleList } from '../../redux/scheduleList/slice';

@@ -1,5 +1,5 @@
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import moment, { Moment } from "moment";
 import { v4 as uuid } from 'uuid';
 interface ScheduleListState {
@@ -14,7 +14,7 @@ export interface ScheduleDetail {
     date: Date;
     subject: string;
     id: string;
-    movements?: any[];
+    movements: any[];
 }
 
 /**
@@ -29,11 +29,11 @@ const initialState: ScheduleListState = {
     error: null,
     scheduleList: [
         { date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [{ id: '胸', sets: [{ reps: 8, weight: 50 }, { reps: 12, weight: 50 }, { reps: 10, weight: 50 }] }] },
-        { date: new Date(2021, 12, 12), subject: '今天練胸', id: uuid() },
-        { date: new Date(2021, 12, 21), subject: '今天練腿', id: uuid() },
-        { date: new Date(2021, 12, 14), subject: '今天練腿', id: uuid() },
-        { date: new Date(2021, 12, 3), subject: '不想動', id: uuid() },
-        { date: new Date(2021, 12, 3), subject: '加班', id: uuid() },
+        { date: new Date(2021, 12, 12), subject: '今天練胸', id: uuid(), movements: [] },
+        { date: new Date(2021, 12, 21), subject: '今天練腿', id: uuid(), movements: [] },
+        { date: new Date(2021, 12, 14), subject: '今天練腿', id: uuid(), movements: [] },
+        { date: new Date(2021, 12, 3), subject: '不想動', id: uuid(), movements: [] },
+        { date: new Date(2021, 12, 3), subject: '加班', id: uuid(), movements: [] },
     ]
 }
 
@@ -45,6 +45,15 @@ export const scheduleList = createSlice({
         getScheduleList: (state) => { },
         addScheduleList: (state, action) => {
             state.scheduleList.push(action.payload);
+        },
+        // 新增動作到當日課表
+        addMovement: (state, action: PayloadAction<{ scheduleId: string, movements: any[] }>) => {
+            state.scheduleList.forEach(s => {
+                if (s.id === action.payload.scheduleId) {
+                    s.movements.push(...action.payload.movements);
+                }
+            })
+            console.log(current(state))
         }
     }
 })
