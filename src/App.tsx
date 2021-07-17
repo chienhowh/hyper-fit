@@ -10,6 +10,7 @@ function App() {
       <HashRouter>
         <Switch>
           <Route exact path='/' component={HomePage}></Route>
+          <Route path='/schedule/:scheduleId' component={SchedulePage}></Route>
           <Route path='/signin' component={SigninPage}></Route>
           <Route path='/register' component={RegisterPage}></Route>
           <Route render={()=> <h1>404 not found</h1>}></Route>

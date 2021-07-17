@@ -1,6 +1,7 @@
 import styles from './HomePage.module.scss';
 import { Calendar, Modal, Input, Button, DatePicker, Form } from 'antd';
 import moment, { Moment } from 'moment';
+
 import 'moment/locale/zh-tw';
 import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -9,6 +10,7 @@ import { SubjectModal } from './SubjectModal';
 import { useDispatch } from 'react-redux';
 import { useSelector } from '../../redux/hooks';
 import { scheduleList } from '../../redux/scheduleList/slice';
+import { useHistory } from 'react-router-dom';
 moment.locale('zh-tw');
 
 
@@ -16,7 +18,8 @@ moment.locale('zh-tw');
 
 export const HomePage: React.FC = () => {
     const dispatch = useDispatch();
-    const calendarData = useSelector(state => state.scheduleList.schedule);
+    const history = useHistory();
+    const calendarData = useSelector(state => state.scheduleList.scheduleList);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
     // modat start
@@ -25,10 +28,11 @@ export const HomePage: React.FC = () => {
     };
 
     const handleOk = () => {
-        form.validateFields().then((value: any) => {
-            // const date = value.date.date();
-            // const subject = value.subject
-            // setCalendarData((prevState) => [...prevState, { date, subject }]);
+        form.validateFields().then((value: { date: Moment, subject: string }) => {
+            const date = value.date.toDate();
+            const subject = value.subject
+            // const uuid = uuid();//為什麼不行
+            dispatch(scheduleList.actions.addScheduleList({ date, subject, id: uuid() }));
             setIsModalVisible(false);
         })
     };
@@ -53,27 +57,23 @@ export const HomePage: React.FC = () => {
         console.log(value.format('YYYY-MM-DD'), mode);
     }
 
-    /** 抓資料 */
-    function getListData(value: Moment) {
-        const listData = calendarData.filter(data => data.date.date() === value.date());
-        return listData;
-    }
 
-    function onOpenBlock() {
-        console.log('test')
+    function onOpenScheduleDetail(id: string) {
+        console.log('test', id);
+        history.push(`/schedule/${id}`);
     }
 
 
     /** 渲染資料到日曆格 */
     function dateCellRender(value: Moment) {
-        const listData = getListData(value);
+        const listData = calendarData.filter(data => data.date.getDate() === value.date());
 
         return (
             <ul className={styles.events}>
                 {listData.map(item => (
                     <li key={item.id} className={styles['ant-badge-status']} onClick={(e) => {
                         e.stopPropagation()
-                        onOpenBlock()
+                        onOpenScheduleDetail(item.id)
                     }}>
                         {item.subject}
                     </li>
@@ -90,7 +90,7 @@ export const HomePage: React.FC = () => {
 
 
     useEffect(() => {
-        dispatch(scheduleList.actions.getScheduleList());
+        // dispatch(scheduleList.actions.getScheduleList());
     }, [])
 
     return (<MainLayout>

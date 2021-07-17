@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
 // 建立store
 const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()]
+    middleware: (getDefaultMiddleware) => [...getDefaultMiddleware({serializableCheck:false})]
 })
 
 
