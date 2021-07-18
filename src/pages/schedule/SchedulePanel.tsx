@@ -10,7 +10,7 @@ interface PropsType {
 export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
     return (
         <Collapse>
-            <Collapse.Panel header={move.id} key="1">
+            <Collapse.Panel header={move.action} key="1">
                 <ul>
                     {move.sets.map(set => {
                         return <li key={uuid()}>{set.reps}下 {set.weight}公斤</li>

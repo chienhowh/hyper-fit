@@ -26,7 +26,7 @@ export const SchedulePage: React.FC = () => {
     const dispatch = useDispatch();
     /** 所有的schedule*/
     const scheduleList = useSelector(s => s.scheduleList.scheduleList);
-    const schedule = scheduleList.filter(s => s.id === scheduleId)[0];
+    const schedule = scheduleList.find(s => s.id === scheduleId);
     /** 創建movement Modal start */
     const [isModalVisible, setIsModalVisible] = useState(false);
     const showModal = () => {
@@ -47,7 +47,7 @@ export const SchedulePage: React.FC = () => {
         <MainLayout>
             <div className="">
                 <div className="text-xl text-center">
-                    {schedule.subject}
+                    {schedule?.subject}
                 </div>
                 {/* 基本提示 */}
                 <div className="flex justify-evenly">
@@ -66,7 +66,7 @@ export const SchedulePage: React.FC = () => {
                 </div>
                 {/* 訓練面板 */}
                 <div className="w-11/12 mx-auto">
-                    {schedule.movements ? schedule.movements.map(move => {
+                    {schedule?.movements ? schedule.movements.map(move => {
                         return <SchedulePanel move={move} key={uuid()}></SchedulePanel>
 
                     }) : ''}
