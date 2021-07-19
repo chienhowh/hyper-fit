@@ -14,15 +14,17 @@ export interface ScheduleDetail {
     date: Date;
     subject: string;
     id: string;
-    movements: any[];
+    movements: Movement[];
 }
 
 /**
  * 每個動作總表
  */
 export interface Movement {
+    //動作部位
+    part: string
     // 動作名稱
-    action:string;
+    action: string;
     // 動作id
     id: string;
     sets: { reps: number, weight: number }[];
@@ -31,7 +33,7 @@ const initialState: ScheduleListState = {
     isLoading: false,
     error: null,
     scheduleList: [
-        { date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [{ action:'槓鈴臥推',id: uuid(), sets: [{ reps: 8, weight: 50 }, { reps: 12, weight: 50 }, { reps: 10, weight: 50 }] }] },
+        { date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [{ part: '胸', action: '槓鈴臥推', id: uuid(), sets: [{ reps: 8, weight: 50 }, { reps: 12, weight: 50 }, { reps: 10, weight: 50 }] }] },
         { date: new Date(2021, 12, 12), subject: '今天練胸', id: uuid(), movements: [] },
         { date: new Date(2021, 12, 21), subject: '今天練腿', id: uuid(), movements: [] },
         { date: new Date(2021, 12, 14), subject: '今天練腿', id: uuid(), movements: [] },

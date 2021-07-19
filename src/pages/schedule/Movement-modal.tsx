@@ -21,43 +21,40 @@ const actionData: { chest: any[], back: any[], legs: any[] } = {
 export const MovementModal: React.FC<PropsType> = ({ scheduleId, handelConfirm, handelCancel }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [bodypart, setBodypart] = useState(bodypartData[0]);
-  const [action, setAction] = useState(actionData[bodypartData[0]][0]);
+  const formValues = { part: bodypartData[0], action: actionData[bodypartData[0]][0] }
+  const [actions, setActions] = useState(actionData[bodypartData[0]]);
+ 
 
-  console.log(bodypart)
-  const addMovement = () => {
-    //   form.validateFields().then((value: { date: Moment, subject: string }) => {
-    //     const date = value.date.toDate();
-    //     const subject = value.subject
-    //     // const uuid = uuid();//為什麼不行
-    //     dispatch(scheduleList.actions.addScheduleList({ date, subject, id: uuid() }));
-    //     setIsModalVisible(false);
-    // })
+  // console.log(bodypart)
+  /** 新增做作 */
+  const addMovement = (form: any) => {
     dispatch(scheduleList.actions.addMovement({
       scheduleId,
-      movement: { action: '胸', id: uuid(), sets: [{ reps: 8, weight: 50 }, { reps: 12, weight: 50 }, { reps: 10, weight: 50 }] }
+      movement: { ...form, id: uuid(), sets: [] }
     }));
-    console.log('add movement')
+    console.log('%c add movement success', 'background: #222; color: #bada55')
   }
 
   // form action start
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-    addMovement();
-    handelConfirm();
+  const onFinish = () => {
+    form.validateFields().then((values: any) => {
+      addMovement(values);// 新增動作
+      handelConfirm();// close modal
+      form.resetFields();
+    })
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
 
-  const handlePartChange = (value: (keyof typeof actionData)) => {
-    setBodypart(value);
-    setAction(actionData[value][0])
+  const handlePartChange = (part: (keyof typeof actionData)) => {
+    form.setFieldsValue({action:actionData[part][0]});
+    setActions(actionData[part]);
   }
 
   const handleActionChange = (value: string) => {
-    setAction(value);
+    // setAction(value);
   }
   // form action end
 
@@ -68,13 +65,14 @@ export const MovementModal: React.FC<PropsType> = ({ scheduleId, handelConfirm, 
       form={form}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
+      initialValues={formValues}
     >
       <Form.Item
         label="請選擇部位"
         name="part"
         rules={[{ required: true, message: '請選擇部位' }]}
       >
-        <Select defaultValue={bodypartData[0]} onChange={handlePartChange}>
+        <Select onChange={handlePartChange}>
           {
             bodypartData.map(part => (<Option key={part} value={part}>{part}</Option>))
           }
@@ -86,8 +84,8 @@ export const MovementModal: React.FC<PropsType> = ({ scheduleId, handelConfirm, 
         name="action"
         rules={[{ required: true, message: '請選擇動作' }]}
       >
-        <Select defaultValue={action} onChange={handleActionChange}>
-          {actionData[bodypart].map(action => (<Option key={action} value={action}>{action}</Option>))}
+        <Select >
+          {actions.map(action => (<Option key={action} value={action}>{action}</Option>))}
         </Select>
       </Form.Item>
       <Button htmlType="button" type="primary" danger onClick={handelCancel} >
