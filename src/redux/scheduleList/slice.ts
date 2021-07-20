@@ -18,7 +18,7 @@ export interface ScheduleDetail {
 }
 
 /**
- * 每個動作總表
+ * 每個動作總表(一個card)
  */
 export interface Movement {
     //動作部位
@@ -27,8 +27,14 @@ export interface Movement {
     action: string;
     // 動作id
     id: string;
-    sets: { reps: number, weight: number }[];
+    sets: SetDetail[];
 }
+/** 單組內容 */
+export interface SetDetail {
+    reps: number;
+    weight: number;
+}
+
 const initialState: ScheduleListState = {
     isLoading: false,
     error: null,
