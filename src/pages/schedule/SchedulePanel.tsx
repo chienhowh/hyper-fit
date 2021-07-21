@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import { Collapse, Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
-import { Movement, SetDetail } from "../../redux/scheduleList/slice";
+import { Collapse, Form, Input, InputNumber, Popconfirm, Table, Typography, Button } from 'antd';
+import { Movement, scheduleList, SetDetail } from "../../redux/scheduleList/slice";
 import { v4 as uuid } from 'uuid';
 import styles from './SchedulePanel.module.scss';
+import { useDispatch } from "react-redux";
 interface PropsType {
     move: Movement;
+    scheduleId: string;
 }
 
-interface Item extends SetDetail {
-    key: string;
-}
+
 /** 修改row */
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
     dataIndex: string;
     title: any;
     inputType: 'number' | 'text';
-    record: Item;
+    record: SetDetail;
     index: number;
     children: React.ReactNode; // 沒在修改的td
 }
@@ -42,15 +42,17 @@ const EditableCell: React.FC<EditableCellProps> = ({ editing, dataIndex, title, 
 }
 
 
-export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
-    const dataSource: Item[] = move.sets.map((set, index) => ({ ...set, key: (index + 1).toString() }));
+export const SchedulePanel: React.FC<PropsType> = ({ move, scheduleId }) => {
+    console.log('reset')
+    const dataSource: SetDetail[] = move.sets;
+    const dispatch = useDispatch();
     const [data, setData] = useState(dataSource);
     const [form] = Form.useForm();
     /** 修改中的cell */
     const [editingKey, setEditingKey] = useState('');
-    const isEditing = (record: Item) => record.key === editingKey;
+    const isEditing = (record: SetDetail) => record.key === editingKey;
 
-    const edit = (record: Partial<Item> & { key: React.Key }) => {
+    const edit = (record: Partial<SetDetail> & { key: React.Key }) => {
         form.setFieldsValue({ reps: '', weight: '', ...record });
         setEditingKey(record.key);
     };
@@ -59,11 +61,18 @@ export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
         setEditingKey('');
     };
 
+    /** 新增組數 */
+    const newSet = () => {
+        let [newSet] = data.slice(-1);
+        if (!newSet) { newSet = { reps: '10', weight: '50', key: '' } };
+        const newData = [...data, { ...newSet, key: uuid() }];
+        dispatch(scheduleList.actions.addSets({ scheduleId: scheduleId, movementId: move.id, sets: newData }));
+    }
     /** 儲存修改資料 */
     const save = async (key: React.Key) => {
         try {
             //修改後的cell
-            const row = (await form.validateFields()) as Item;
+            const row = (await form.validateFields()) as SetDetail;
 
             const newData = [...data];
             const index = newData.findIndex(item => key === item.key);
@@ -82,6 +91,7 @@ export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
                 setData(newData);
                 setEditingKey('');
             }
+            dispatch(scheduleList.actions.addSets({ scheduleId: scheduleId, movementId: move.id, sets: newData }))
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
@@ -93,19 +103,12 @@ export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
         {
             title: 'operation',
             dataIndex: 'operation',
-            render: (_: any, record: Item) => {
+            render: (_: any, record: SetDetail) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <a href="javascript:;" onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-                            修改
-                        </a>
-                        {/* <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>取消</a>
-                        </Popconfirm> */}
-                        <a href="javascript:;" onClick={cancel}>
-                            取消
-                        </a>
+                        <Button onClick={() => save(record.key)} style={{ marginRight: 8 }}>修改</Button>
+                        <Button onClick={cancel}>取消</Button>
                     </span>
                 ) : (
                     <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
@@ -121,7 +124,7 @@ export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
         }
         return {
             ...col,
-            onCell: (record: Item) => ({
+            onCell: (record: SetDetail) => ({
                 record,
                 inputType: col.dataIndex === 'age' ? 'number' : 'text',
                 dataIndex: col.dataIndex,
@@ -132,8 +135,8 @@ export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
     });
 
     return (
-        <Collapse>
-            <Collapse.Panel header={move.action} key="1">
+        <Collapse >
+            <Collapse.Panel header={move.action} key="1" forceRender={true}>
                 {/* <Table columns={columns} dataSource={dataSource} pagination={false}></Table> */}
                 <Form form={form} component={false}>
                     <Table
@@ -148,6 +151,7 @@ export const SchedulePanel: React.FC<PropsType> = ({ move }) => {
                         pagination={false}
                     />
                 </Form>
+                <Button onClick={newSet}>新增</Button>
             </Collapse.Panel>
         </Collapse >
     )

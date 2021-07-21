@@ -31,15 +31,16 @@ export interface Movement {
 }
 /** 單組內容 */
 export interface SetDetail {
-    reps: number;
-    weight: number;
+    reps: string;
+    weight: string;
+    key: string;
 }
 
 const initialState: ScheduleListState = {
     isLoading: false,
     error: null,
     scheduleList: [
-        { date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [{ part: '胸', action: '槓鈴臥推', id: uuid(), sets: [{ reps: 8, weight: 50 }, { reps: 12, weight: 50 }, { reps: 10, weight: 50 }] }] },
+        { date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [{ part: '胸', action: '槓鈴臥推', id: uuid(), sets: [{ reps: '8', weight: '50', key: '1' }, { reps: '12', weight: '50', key: '2' }, { reps: '10', weight: '50', key: '3' }] }] },
         { date: new Date(2021, 12, 12), subject: '今天練胸', id: uuid(), movements: [] },
         { date: new Date(2021, 12, 21), subject: '今天練腿', id: uuid(), movements: [] },
         { date: new Date(2021, 12, 14), subject: '今天練腿', id: uuid(), movements: [] },
@@ -65,6 +66,18 @@ export const scheduleList = createSlice({
                 }
             })
             console.log(current(state))
+        },
+        //新增重量、次數到動作
+        addSets: (state, action: PayloadAction<{ scheduleId: string, movementId: string, sets: SetDetail[] }>) => {
+            state.scheduleList.forEach(s => {
+                if (s.id === action.payload.scheduleId) {
+                    s.movements.forEach(m => {
+                        if (m.id === action.payload.movementId) {
+                            m.sets = action.payload.sets;
+                        }
+                    })
+                }
+            })
         }
     }
 })

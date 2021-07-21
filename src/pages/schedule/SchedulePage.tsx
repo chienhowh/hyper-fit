@@ -67,7 +67,7 @@ export const SchedulePage: React.FC = () => {
                 {/* 訓練面板 */}
                 <div className="w-11/12 mx-auto">
                     {schedule?.movements ? schedule.movements.map(move => {
-                        return <SchedulePanel move={move} key={uuid()}></SchedulePanel>
+                        return <SchedulePanel move={move} scheduleId={schedule.id} key={uuid()}></SchedulePanel>
 
                     }) : ''}
                 </div>
