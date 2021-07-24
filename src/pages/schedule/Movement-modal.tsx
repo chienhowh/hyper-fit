@@ -23,14 +23,14 @@ export const MovementModal: React.FC<PropsType> = ({ scheduleId, handelConfirm, 
   const [form] = Form.useForm();
   const formValues = { part: bodypartData[0], action: actionData[bodypartData[0]][0] }
   const [actions, setActions] = useState(actionData[bodypartData[0]]);
- 
+
 
   // console.log(bodypart)
   /** 新增做作 */
   const addMovement = (form: any) => {
     dispatch(scheduleList.actions.addMovement({
       scheduleId,
-      movement: { ...form, id: uuid(), sets: [] }
+      movement: { ...form, id: uuid(), sets: [{ reps: '8', weight: '50', key: '1' }] }
     }));
     console.log('%c add movement success', 'background: #222; color: #bada55')
   }
@@ -49,7 +49,7 @@ export const MovementModal: React.FC<PropsType> = ({ scheduleId, handelConfirm, 
   };
 
   const handlePartChange = (part: (keyof typeof actionData)) => {
-    form.setFieldsValue({action:actionData[part][0]});
+    form.setFieldsValue({ action: actionData[part][0] });
     setActions(actionData[part]);
   }
 

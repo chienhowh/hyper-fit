@@ -40,7 +40,20 @@ const initialState: ScheduleListState = {
     isLoading: false,
     error: null,
     scheduleList: [
-        { date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [{ part: '胸', action: '槓鈴臥推', id: uuid(), sets: [{ reps: '8', weight: '50', key: '1' }, { reps: '12', weight: '50', key: '2' }, { reps: '10', weight: '50', key: '3' }] }] },
+        {
+            date: new Date(2021, 12, 22), subject: '今天練胸', id: uuid(), movements: [
+                {
+                    part: '胸', action: '槓鈴臥推', id: uuid(), sets: [
+                        { reps: '8', weight: '50', key: '1' }, { reps: '12', weight: '50', key: '2' }, { reps: '10', weight: '50', key: '3' }
+                    ]
+                },
+                {
+                    part: '背', action: '引體向上', id: uuid(), sets: [
+                        { reps: '10', weight: '12', key: '1' }, { reps: '12', weight: '50', key: '2' }, { reps: '12', weight: '60', key: '3' }
+                    ]
+                }
+            ]
+        },
         { date: new Date(2021, 12, 12), subject: '今天練胸', id: uuid(), movements: [] },
         { date: new Date(2021, 12, 21), subject: '今天練腿', id: uuid(), movements: [] },
         { date: new Date(2021, 12, 14), subject: '今天練腿', id: uuid(), movements: [] },
@@ -55,6 +68,7 @@ export const scheduleList = createSlice({
     reducers: {
         //mutuable 連return都不用
         getScheduleList: (state) => { },
+
         addScheduleList: (state, action) => {
             state.scheduleList.push(action.payload);
         },

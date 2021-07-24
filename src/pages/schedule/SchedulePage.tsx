@@ -27,6 +27,9 @@ export const SchedulePage: React.FC = () => {
     /** 所有的schedule*/
     const scheduleList = useSelector(s => s.scheduleList.scheduleList);
     const schedule = scheduleList.find(s => s.id === scheduleId);
+    const totalSets = schedule?.movements.map(s => s.sets.length).reduce((prev, ele) => prev + ele);
+    const totalWeight = schedule?.movements.map(m => m.sets).map(s=>s.map(w=>+w.weight)).reduce((prev, ele) => prev.concat(ele)).reduce((prev, ele) => prev + ele);
+    console.log(totalWeight);
     /** 創建movement Modal start */
     const [isModalVisible, setIsModalVisible] = useState(false);
     const showModal = () => {
@@ -53,11 +56,11 @@ export const SchedulePage: React.FC = () => {
                 <div className="flex justify-evenly">
                     <div className={styles['header-hint']}>
                         <div> 總組數:</div>
-                        <div>12組</div>
+                        <div>{totalSets}組</div>
                     </div>
                     <div className={styles['header-hint']}>
                         <div >總重量:</div>
-                        <div>100kg</div>
+                        <div>{totalWeight}kg</div>
                     </div>
                     <div className={styles['header-hint']}>
                         <div>時間:</div>
@@ -71,6 +74,7 @@ export const SchedulePage: React.FC = () => {
 
                     }) : ''}
                 </div>
+                {/* add movement */}
                 <Button icon={<PlusOutlined />} className={styles.addMovement} onClick={showModal}></Button>
             </div>
             {/* modal start */}
@@ -78,6 +82,7 @@ export const SchedulePage: React.FC = () => {
                 footer={null}>
                 <MovementModal handelConfirm={handleOk} handelCancel={handleCancel} scheduleId={scheduleId}></MovementModal>
             </Modal>
+            {/* modal end */}
         </MainLayout>
 
     )

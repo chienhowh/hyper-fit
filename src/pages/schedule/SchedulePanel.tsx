@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Collapse, Form, Input, InputNumber, Popconfirm, Table, Typography, Button } from 'antd';
+import { Collapse, Form, Input, InputNumber, Table, Typography, Button } from 'antd';
 import { Movement, scheduleList, SetDetail } from "../../redux/scheduleList/slice";
 import { v4 as uuid } from 'uuid';
 import styles from './SchedulePanel.module.scss';
