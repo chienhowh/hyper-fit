@@ -27,8 +27,8 @@ export const SchedulePage: React.FC = () => {
     /** 所有的schedule*/
     const scheduleList = useSelector(s => s.scheduleList.scheduleList);
     const schedule = scheduleList.find(s => s.id === scheduleId);
-    const totalSets = schedule?.movements.map(s => s.sets.length).reduce((prev, ele) => prev + ele);
-    const totalWeight = schedule?.movements.map(m => m.sets).map(s=>s.map(w=>+w.weight)).reduce((prev, ele) => prev.concat(ele)).reduce((prev, ele) => prev + ele);
+    const totalSets = schedule?.movements.map(s => s.sets.length).reduce((prev, ele) => prev + ele, 0);
+    const totalWeight = schedule?.movements.map(m => m.sets).map(s => s.map(w => +w.weight * +w.reps)).reduce((prev, ele) => prev.concat(ele), []).reduce((prev, ele) => prev + ele, 0);
     console.log(totalWeight);
     /** 創建movement Modal start */
     const [isModalVisible, setIsModalVisible] = useState(false);

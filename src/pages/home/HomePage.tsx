@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from '../../redux/hooks';
 import { scheduleList } from '../../redux/scheduleList/slice';
 import { useHistory } from 'react-router-dom';
+import { PlusOutlined } from '@ant-design/icons';
 moment.locale('zh-tw');
 
 
@@ -81,8 +82,8 @@ export const HomePage: React.FC = () => {
         );
     }
 
-    function onClickDate(value: Moment) {
-        form.setFieldsValue({ date: value, subject: '' });
+    function handleNewSchedule() {
+        form.setFieldsValue({ date: moment(), subject: '' });
         showModal();
     }
     // calendar end
@@ -93,10 +94,10 @@ export const HomePage: React.FC = () => {
     }, [])
 
     return (<MainLayout>
-        <div>
-            <Calendar onPanelChange={onPanelChange} fullscreen={false} dateCellRender={dateCellRender} onSelect={onClickDate} className={`${styles['mobile-calendar-card']} calendar`} />
+        <div className="relative">
+            <Calendar onPanelChange={onPanelChange} fullscreen={false} dateCellRender={dateCellRender} className={`${styles['mobile-calendar-card']} calendar`} />
+            <Button icon={<PlusOutlined />} className="add-icon" onClick={handleNewSchedule}>新增課表</Button>
         </div>
-
         {/* modal start */}
         <Modal title="Basic Modal" visible={isModalVisible} onCancel={handleCancel}
             footer={

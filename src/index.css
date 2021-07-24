@@ -14,3 +14,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.add-icon{
+  position: absolute !important;
+  top: 85%;
+  right: 24px;
+}

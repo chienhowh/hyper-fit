@@ -70,7 +70,8 @@ export const scheduleList = createSlice({
         getScheduleList: (state) => { },
 
         addScheduleList: (state, action) => {
-            state.scheduleList.push(action.payload);
+            state.scheduleList.push({ ...action.payload, movements: [] });
+            console.log(current(state))
         },
         // 新增動作到當日課表
         addMovement: (state, action: PayloadAction<{ scheduleId: string, movement: any }>) => {
